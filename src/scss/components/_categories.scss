@@ -1,8 +1,18 @@
 @import '../variables';
 
 .categories {
+  @media (max-width: 1170px) {
+    width: 100%;
+    overflow-x: scroll;
+  }
+
   ul {
     display: flex;
+
+    @media (max-width: 1170px) {
+      margin-top: 30px;
+      overflow-x: scroll;
+    }
 
     li {
       background-color: #f9f9f9;
