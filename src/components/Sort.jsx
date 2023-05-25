@@ -1,14 +1,13 @@
 import React from 'react';
 
-function Sort() {
+function Sort({ sortId, onChangeSort }) {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [categoryIndex, setCategoryIndex] = React.useState(0);
 
   const categories = ['популярности', 'цене', 'алфавиту'];
-  const currentCategory = categories[categoryIndex];
+  const currentCategory = categories[sortId];
 
   const handleCategoryChange = (indx) => {
-    setCategoryIndex(indx);
+    onChangeSort(indx);
     setIsOpen(false);
   };
 
@@ -36,7 +35,7 @@ function Sort() {
               <li
                 key={category}
                 onClick={() => handleCategoryChange(i)}
-                className={categoryIndex === i ? 'active' : ''}>
+                className={sortId === i ? 'active' : ''}>
                 {category}
               </li>
             ))}
