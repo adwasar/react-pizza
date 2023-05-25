@@ -1,7 +1,9 @@
 .cart-content {
-  text-align: center;
   display: flex;
   flex-direction: column;
-  height: 600px;
-  justify-content: center;
+  min-height: 600px;
+
+  .content__items {
+    display: block;
+  }
 }
