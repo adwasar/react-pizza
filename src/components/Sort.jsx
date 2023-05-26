@@ -1,10 +1,15 @@
 import React from 'react';
 
-function Sort({ sortId, onChangeSort }) {
+function Sort({ sortType, onChangeSort }) {
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const categories = ['популярности', 'цене', 'алфавиту'];
-  const currentCategory = categories[sortId];
+  const categories = [
+    { name: 'популярности', attribute: 'rating' },
+    { name: 'цене (возрастанию)', attribute: 'price' },
+    { name: 'цене (убыванию)', attribute: '-price' },
+    { name: 'алфавиту (а-я)', attribute: 'title' },
+    { name: 'алфавиту (я-а)', attribute: '-title' },
+  ];
 
   const handleCategoryChange = (indx) => {
     onChangeSort(indx);
@@ -26,17 +31,17 @@ function Sort({ sortId, onChangeSort }) {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setIsOpen(!isOpen)}>{currentCategory}</span>
+        <span onClick={() => setIsOpen(!isOpen)}>{sortType.name}</span>
       </div>
       {isOpen && (
         <div className="sort__popup">
           <ul>
             {categories.map((category, i) => (
               <li
-                key={category}
-                onClick={() => handleCategoryChange(i)}
-                className={sortId === i ? 'active' : ''}>
-                {category}
+                key={i}
+                onClick={() => handleCategoryChange(category)}
+                className={sortType.name === category.name ? 'active' : ''}>
+                {categories[i].name}
               </li>
             ))}
           </ul>
