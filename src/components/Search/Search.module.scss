@@ -18,3 +18,15 @@
   left: 10px;
   opacity: 0.2;
 }
+
+.clear {
+  position: absolute;
+  right: 10px;
+  top: 6px;
+  opacity: 0.2;
+
+  &:hover {
+    opacity: 0.4;
+    cursor: pointer;
+  }
+}
