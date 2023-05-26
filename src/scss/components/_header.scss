@@ -13,11 +13,32 @@
     align-items: center;
     justify-content: space-between;
 
+    @media (max-width: 1000px) {
+      display: grid;
+      grid-template-columns: 3fr 1fr;
+
+      .search-input {
+        margin-top: 40px;
+        width: 100%;
+        grid-area: 2 / 1 / 2 / 3;
+      }
+    }
+
     @media (max-width: 650px) {
-      flex-direction: column;
+      grid-template-columns: 1fr;
+
+      .search-input {
+        margin-top: 20px;
+        width: 100%;
+        grid-area: 3 / 1;
+      }
 
       .header__cart {
         margin-top: 20px;
+      }
+
+      .button--cart {
+        margin: 0 auto;
       }
     }
   }
@@ -48,5 +69,9 @@
     @media (max-width: 460px) {
       width: 200px;
     }
+  }
+
+  .search-input {
+    position: relative;
   }
 }
