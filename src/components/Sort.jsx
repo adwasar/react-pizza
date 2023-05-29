@@ -2,6 +2,7 @@ import React from 'react';
 
 function Sort({ sortType, onChangeSort }) {
   const [isOpen, setIsOpen] = React.useState(false);
+  const sortRef = React.useRef(null);
 
   const categories = [
     { name: 'популярности', attribute: 'rating' },
@@ -16,8 +17,20 @@ function Sort({ sortType, onChangeSort }) {
     setIsOpen(false);
   };
 
+  const handleClickOutSort = (event) => {
+    if (sortRef.current && !sortRef.current.contains(event.target)) {
+      setIsOpen(false);
+      console.log(1);
+    }
+  };
+
+  React.useEffect(() => {
+    document.addEventListener('click', handleClickOutSort);
+    return () => document.removeEventListener('click', handleClickOutSort);
+  }, []);
+
   return (
-    <div className="sort">
+    <div className="sort" ref={sortRef}>
       <div className="sort__label">
         <svg
           width="10"
