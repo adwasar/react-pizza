@@ -4,14 +4,12 @@ import Header from './Header';
 
 function Layout() {
   return (
-    <>
-      <div className="App">
-        <div className="wrapper">
-          <Header />
-          <Outlet></Outlet>
-        </div>
+    <div className="App">
+      <div className="wrapper">
+        <Header />
+        <Outlet></Outlet>
       </div>
-    </>
+    </div>
   );
 }
 

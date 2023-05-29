@@ -1,20 +1,24 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import SkeletonPizza from '../components/PizzaBlock/Skeleton';
 
+import Context from '../Context';
+
 function HomePage() {
-  const [pizzas, setPizzas] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [categoryId, setCategoryId] = React.useState(0);
-  const [sortType, setSortType] = React.useState({
+  const [pizzas, setPizzas] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [categoryId, setCategoryId] = useState(0);
+  const [sortType, setSortType] = useState({
     name: 'популярности',
     attribute: 'rating',
   });
 
-  React.useEffect(() => {
+  const { searchValue } = useContext(Context);
+
+  useEffect(() => {
     const order = sortType.attribute.includes('-') ? 'desc' : 'asc';
     const sortBy = sortType.attribute.replace('-', '');
     const category = categoryId && 'category=' + categoryId;
@@ -30,6 +34,10 @@ function HomePage() {
     );
   }, [sortType, categoryId]);
 
+  const filteredPizzas = pizzas.filter((pizza) =>
+    pizza.title.toLowerCase().includes(searchValue.toLowerCase()),
+  );
+
   return (
     <div className="App">
       <div className="wrapper">
@@ -43,7 +51,7 @@ function HomePage() {
             <div className="content__items">
               {isLoading
                 ? [...Array(6)].map((_, i) => <SkeletonPizza key={i} className="pizza-block" />)
-                : pizzas.map((pizza) => <PizzaBlock key={pizza.id} {...pizza} />)}
+                : filteredPizzas.map((pizza) => <PizzaBlock key={pizza.id} {...pizza} />)}
             </div>
           </div>
         </div>
