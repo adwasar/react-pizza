@@ -6,8 +6,11 @@ import PizzaBlock from '../components/PizzaBlock';
 import SkeletonPizza from '../components/PizzaBlock/Skeleton';
 
 import Context from '../Context';
+import Pagination from '../components/Pagination';
 
 function HomePage() {
+  const { searchValue, currentPage } = useContext(Context);
+
   const [pizzas, setPizzas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [categoryId, setCategoryId] = useState(0);
@@ -15,8 +18,6 @@ function HomePage() {
     name: 'популярности',
     attribute: 'rating',
   });
-
-  const { searchValue } = useContext(Context);
 
   useEffect(() => {
     const order = sortType.attribute.includes('-') ? 'desc' : 'asc';
@@ -38,6 +39,16 @@ function HomePage() {
     pizza.title.toLowerCase().includes(searchValue.toLowerCase()),
   );
 
+  const pizzasAll = filteredPizzas.map((pizza) => <PizzaBlock key={pizza.id} {...pizza} />);
+  const maxPizzasOnPage = 8;
+  const startPizzaIndex = (currentPage - 1) * maxPizzasOnPage;
+  const endPizzaIndex = startPizzaIndex + maxPizzasOnPage;
+  const pizzasOnPage = pizzasAll.slice(startPizzaIndex, endPizzaIndex);
+
+  useEffect(() => {
+    console.log(pizzasAll);
+  }, [pizzasAll]);
+
   return (
     <div className="App">
       <div className="wrapper">
@@ -51,8 +62,9 @@ function HomePage() {
             <div className="content__items">
               {isLoading
                 ? [...Array(6)].map((_, i) => <SkeletonPizza key={i} className="pizza-block" />)
-                : filteredPizzas.map((pizza) => <PizzaBlock key={pizza.id} {...pizza} />)}
+                : pizzasOnPage}
             </div>
+            <Pagination pizzas={pizzas} />
           </div>
         </div>
       </div>

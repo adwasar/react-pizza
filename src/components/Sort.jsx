@@ -20,7 +20,6 @@ function Sort({ sortType, onChangeSort }) {
   const handleClickOutSort = (event) => {
     if (sortRef.current && !sortRef.current.contains(event.target)) {
       setIsOpen(false);
-      console.log(1);
     }
   };
 
