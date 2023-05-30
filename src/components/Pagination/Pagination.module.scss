@@ -1,0 +1,40 @@
+.container {
+  padding-bottom: 40px;
+  ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    color: #eb5a1e;
+
+    li {
+      width: 40px;
+      height: 40px;
+      line-height: 39px;
+      border: solid 1px #eb5a1e;
+      border-radius: 50%;
+      text-align: center;
+      margin-right: 15px;
+      cursor: pointer;
+      &:hover {
+        background-color: #eb5a1e;
+        color: #fff;
+      }
+    }
+
+    button {
+      width: 40px;
+      height: 40px;
+      border: solid 1px #eb5a1e;
+      border-radius: 50%;
+      margin-right: 20px;
+      background-color: #eb5a1e;
+      color: #fff;
+      cursor: pointer;
+    }
+  }
+}
+
+.active {
+  background-color: #eb5a1e;
+  color: #fff;
+}

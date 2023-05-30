@@ -1,19 +1,35 @@
 import React from 'react';
 
-function Sort() {
+function Sort({ sortType, onChangeSort }) {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [categoryIndex, setCategoryIndex] = React.useState(0);
+  const sortRef = React.useRef(null);
 
-  const categories = ['популярности', 'цене', 'алфавиту'];
-  const currentCategory = categories[categoryIndex];
+  const categories = [
+    { name: 'популярности', attribute: 'rating' },
+    { name: 'цене (возрастанию)', attribute: 'price' },
+    { name: 'цене (убыванию)', attribute: '-price' },
+    { name: 'алфавиту (а-я)', attribute: 'title' },
+    { name: 'алфавиту (я-а)', attribute: '-title' },
+  ];
 
   const handleCategoryChange = (indx) => {
-    setCategoryIndex(indx);
+    onChangeSort(indx);
     setIsOpen(false);
   };
 
+  const handleClickOutSort = (event) => {
+    if (sortRef.current && !sortRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  React.useEffect(() => {
+    document.addEventListener('click', handleClickOutSort);
+    return () => document.removeEventListener('click', handleClickOutSort);
+  }, []);
+
   return (
-    <div className="sort">
+    <div className="sort" ref={sortRef}>
       <div className="sort__label">
         <svg
           width="10"
@@ -27,17 +43,17 @@ function Sort() {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setIsOpen(!isOpen)}>{currentCategory}</span>
+        <span onClick={() => setIsOpen(!isOpen)}>{sortType.name}</span>
       </div>
       {isOpen && (
         <div className="sort__popup">
           <ul>
             {categories.map((category, i) => (
               <li
-                key={category}
-                onClick={() => handleCategoryChange(i)}
-                className={categoryIndex === i ? 'active' : ''}>
-                {category}
+                key={i}
+                onClick={() => handleCategoryChange(category)}
+                className={sortType.name === category.name ? 'active' : ''}>
+                {categories[i].name}
               </li>
             ))}
           </ul>
