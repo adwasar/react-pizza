@@ -1,23 +1,24 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import SkeletonPizza from '../components/PizzaBlock/Skeleton';
 
+import { setCategoryId } from '../redux/slices/filterSlice';
 import Context from '../Context';
 import Pagination from '../components/Pagination';
 
 function HomePage() {
+  const dispatch = useDispatch();
+  const categoryId = useSelector((state) => state.filter.categoryId);
+  const sortType = useSelector((state) => state.filter.sortBy);
+
   const { searchValue, currentPage } = useContext(Context);
 
   const [pizzas, setPizzas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [categoryId, setCategoryId] = useState(0);
-  const [sortType, setSortType] = useState({
-    name: 'популярности',
-    attribute: 'rating',
-  });
 
   useEffect(() => {
     const order = sortType.attribute.includes('-') ? 'desc' : 'asc';
@@ -45,18 +46,17 @@ function HomePage() {
   const endPizzaIndex = startPizzaIndex + maxPizzasOnPage;
   const pizzasOnPage = pizzasAll.slice(startPizzaIndex, endPizzaIndex);
 
-  useEffect(() => {
-    console.log(pizzasAll);
-  }, [pizzasAll]);
-
   return (
     <div className="App">
       <div className="wrapper">
         <div className="content">
           <div className="container">
             <div className="content__top">
-              <Categories categoryId={categoryId} onChangeCategory={(id) => setCategoryId(id)} />
-              <Sort sortType={sortType} onChangeSort={(id) => setSortType(id)} />
+              <Categories
+                categoryId={categoryId}
+                onChangeCategory={(id) => dispatch(setCategoryId(id))}
+              />
+              <Sort />
             </div>
             <h2 className="content__title">Все пиццы</h2>
             <div className="content__items">

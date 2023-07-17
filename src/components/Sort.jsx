@@ -1,6 +1,12 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-function Sort({ sortType, onChangeSort }) {
+import { setSortType } from '../redux/slices/filterSlice';
+
+function Sort() {
+  const dispatch = useDispatch();
+  const sortType = useSelector((state) => state.filter.sortBy);
+
   const [isOpen, setIsOpen] = React.useState(false);
   const sortRef = React.useRef(null);
 
@@ -13,7 +19,7 @@ function Sort({ sortType, onChangeSort }) {
   ];
 
   const handleCategoryChange = (indx) => {
-    onChangeSort(indx);
+    dispatch(setSortType(indx));
     setIsOpen(false);
   };
 
