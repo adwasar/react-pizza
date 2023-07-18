@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
 
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
@@ -26,14 +27,23 @@ function HomePage() {
     const category = categoryId && 'category=' + categoryId;
 
     setIsLoading(true);
-    fetch(
-      `https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?sortBy=${sortBy}&${category}&order=${order}`,
-    ).then((res) =>
-      res.json().then((json) => {
-        setPizzas(json);
+    // fetch(
+    //   `https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?sortBy=${sortBy}&${category}&order=${order}`,
+    // ).then((res) =>
+    //   res.json().then((json) => {
+    //     setPizzas(json);
+    //     setIsLoading(false);
+    //   }),
+    // );
+
+    axios
+      .get(
+        `https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?sortBy=${sortBy}&${category}&order=${order}`,
+      )
+      .then((res) => {
+        setPizzas(res.data);
         setIsLoading(false);
-      }),
-    );
+      });
   }, [sortType, categoryId]);
 
   const filteredPizzas = pizzas.filter((pizza) =>
