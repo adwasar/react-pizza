@@ -12,10 +12,12 @@ import Pagination from '../components/Pagination';
 
 function HomePage() {
   const dispatch = useDispatch();
+
   const categoryId = useSelector((state) => state.filter.categoryId);
   const sortType = useSelector((state) => state.filter.sortBy);
+  const currentPage = useSelector((state) => state.pagination.currentPage);
 
-  const { searchValue, currentPage } = useContext(Context);
+  const { searchValue } = useContext(Context);
 
   const [pizzas, setPizzas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
