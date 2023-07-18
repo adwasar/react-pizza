@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Categories from '../components/Categories';
@@ -7,7 +7,6 @@ import PizzaBlock from '../components/PizzaBlock';
 import SkeletonPizza from '../components/PizzaBlock/Skeleton';
 
 import { setCategoryId } from '../redux/slices/filterSlice';
-import Context from '../Context';
 import Pagination from '../components/Pagination';
 
 function HomePage() {
@@ -16,8 +15,7 @@ function HomePage() {
   const categoryId = useSelector((state) => state.filter.categoryId);
   const sortType = useSelector((state) => state.filter.sortBy);
   const currentPage = useSelector((state) => state.pagination.currentPage);
-
-  const { searchValue } = useContext(Context);
+  const searchValue = useSelector((state) => state.search.value);
 
   const [pizzas, setPizzas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
