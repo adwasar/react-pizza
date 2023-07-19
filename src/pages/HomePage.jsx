@@ -8,6 +8,7 @@ import PizzaBlock from '../components/PizzaBlock';
 import SkeletonPizza from '../components/PizzaBlock/Skeleton';
 
 import { setCategoryId } from '../redux/slices/filterSlice';
+import { setNumberOfPizzas } from '../redux/slices/paginationSlice';
 import Pagination from '../components/Pagination';
 
 function HomePage() {
@@ -26,28 +27,33 @@ function HomePage() {
     const sortBy = `&sortBy=${sortType.attribute.replace('-', '')}`;
     const category = categoryId > 0 ? `&category=${categoryId}` : '';
     const searchParam = searchValue ? `&search=${searchValue}` : '';
+    const page = `&page=${currentPage}`;
+    const limit = `&limit=8`;
 
     setIsLoading(true);
     axios
       .get(
-        `https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?${searchParam}${category}${sortBy}${order}`,
+        `https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?${searchParam}${category}${sortBy}${order}${page}${limit}`,
       )
       .then((res) => {
         console.log(res.data);
         setPizzas(res.data);
         setIsLoading(false);
       });
-  }, [sortType, categoryId, searchValue]);
+    axios
+      .get(
+        `https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?${searchParam}${category}${sortBy}${order}`,
+      )
+      .then((res) => {
+        dispatch(setNumberOfPizzas(res.data.length));
+      });
+  }, [sortType, categoryId, searchValue, currentPage, dispatch]);
 
   const filteredPizzas = pizzas.filter((pizza) =>
     pizza.title.toLowerCase().includes(searchValue.toLowerCase()),
   );
 
-  const pizzasAll = filteredPizzas.map((pizza) => <PizzaBlock key={pizza.id} {...pizza} />);
-  const maxPizzasOnPage = 8;
-  const startPizzaIndex = (currentPage - 1) * maxPizzasOnPage;
-  const endPizzaIndex = startPizzaIndex + maxPizzasOnPage;
-  const pizzasOnPage = pizzasAll.slice(startPizzaIndex, endPizzaIndex);
+  const pizzasOnPage = filteredPizzas.map((pizza) => <PizzaBlock key={pizza.id} {...pizza} />);
 
   return (
     <div className="App">

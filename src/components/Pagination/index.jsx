@@ -7,8 +7,9 @@ import styles from './Pagination.module.scss';
 function Pagination({ pizzas }) {
   const dispatch = useDispatch();
   const currentPage = useSelector((state) => state.pagination.currentPage);
+  const numberOfPizzas = useSelector((state) => state.pagination.numberOfPizzas);
 
-  const pages = [...Array(Math.ceil(pizzas.length / 8))];
+  const pages = [...Array(Math.ceil(numberOfPizzas / 8))];
 
   const goBackPage = () => {
     if (currentPage > 1) {
