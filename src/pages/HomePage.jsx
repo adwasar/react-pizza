@@ -22,29 +22,22 @@ function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const order = sortType.attribute.includes('-') ? 'desc' : 'asc';
-    const sortBy = sortType.attribute.replace('-', '');
-    const category = categoryId && 'category=' + categoryId;
+    const order = sortType.attribute.includes('-') ? '&order=desc' : '&order=asc';
+    const sortBy = `&sortBy=${sortType.attribute.replace('-', '')}`;
+    const category = categoryId > 0 ? `&category=${categoryId}` : '';
+    const searchParam = searchValue ? `&search=${searchValue}` : '';
 
     setIsLoading(true);
-    // fetch(
-    //   `https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?sortBy=${sortBy}&${category}&order=${order}`,
-    // ).then((res) =>
-    //   res.json().then((json) => {
-    //     setPizzas(json);
-    //     setIsLoading(false);
-    //   }),
-    // );
-
     axios
       .get(
-        `https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?sortBy=${sortBy}&${category}&order=${order}`,
+        `https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?${searchParam}${category}${sortBy}${order}`,
       )
       .then((res) => {
+        console.log(res.data);
         setPizzas(res.data);
         setIsLoading(false);
       });
-  }, [sortType, categoryId]);
+  }, [sortType, categoryId, searchValue]);
 
   const filteredPizzas = pizzas.filter((pizza) =>
     pizza.title.toLowerCase().includes(searchValue.toLowerCase()),
