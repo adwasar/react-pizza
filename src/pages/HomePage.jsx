@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import qs from 'qs';
 
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
@@ -13,6 +15,7 @@ import Pagination from '../components/Pagination';
 
 function HomePage() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const categoryId = useSelector((state) => state.filter.categoryId);
   const sortType = useSelector((state) => state.filter.sortBy);
@@ -21,39 +24,66 @@ function HomePage() {
 
   const [pizzas, setPizzas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const isInitialLoad = useRef(true);
+
+  const pizzasOnPage = pizzas.map((pizza) => <PizzaBlock key={pizza.id} {...pizza} />);
 
   useEffect(() => {
-    const order = sortType.attribute.includes('-') ? '&order=desc' : '&order=asc';
-    const sortBy = `&sortBy=${sortType.attribute.replace('-', '')}`;
-    const category = categoryId > 0 ? `&category=${categoryId}` : '';
-    const searchParam = searchValue ? `&search=${searchValue}` : '';
-    const page = `&page=${currentPage}`;
-    const limit = `&limit=8`;
+    const searchObj = qs.parse(window.location.search.substring(1));
+    console.log(searchObj);
+    dispatch(setCategoryId(+searchObj.category));
 
-    setIsLoading(true);
-    axios
-      .get(
-        `https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?${searchParam}${category}${sortBy}${order}${page}${limit}`,
-      )
-      .then((res) => {
-        console.log(res.data);
+    if (window.location.search) {
+      axios
+        .get(`https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas${window.location.search}`)
+        .then((res) => {
+          dispatch(setNumberOfPizzas(res.data.length));
+          setPizzas(res.data);
+          setIsLoading(false);
+        });
+    } else {
+      axios.get(`https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas`).then((res) => {
+        dispatch(setNumberOfPizzas(res.data.length));
         setPizzas(res.data);
         setIsLoading(false);
       });
-    axios
-      .get(
-        `https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?${searchParam}${category}${sortBy}${order}`,
-      )
-      .then((res) => {
-        dispatch(setNumberOfPizzas(res.data.length));
-      });
-  }, [sortType, categoryId, searchValue, currentPage, dispatch]);
+    }
+  }, [dispatch]);
 
-  const filteredPizzas = pizzas.filter((pizza) =>
-    pizza.title.toLowerCase().includes(searchValue.toLowerCase()),
-  );
+  useEffect(() => {
+    if (!isInitialLoad.current) {
+      const order = sortType.attribute.includes('-') ? '&order=desc' : '&order=asc';
+      const sortBy = `&sortBy=${sortType.attribute.replace('-', '')}`;
+      const category = categoryId > 0 ? `&category=${categoryId}` : '';
+      const searchParam = searchValue ? `&search=${searchValue}` : '';
+      const page = `&page=${currentPage}`;
+      const limit = `&limit=8`;
 
-  const pizzasOnPage = filteredPizzas.map((pizza) => <PizzaBlock key={pizza.id} {...pizza} />);
+      setIsLoading(true);
+      axios
+        .get(
+          `https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?${searchParam}${category}${sortBy}${order}${page}${limit}`,
+        )
+        .then((res) => {
+          navigate(`?${searchParam}${category}${sortBy}${order}${page}${limit}`);
+          if (!searchParam && !category && sortType.attribute === 'rating' && currentPage === 1) {
+            const newUrl = window.location.pathname;
+            window.history.replaceState({}, '', newUrl);
+          }
+          setPizzas(res.data);
+          setIsLoading(false);
+        });
+      axios
+        .get(
+          `https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?${searchParam}${category}${sortBy}${order}`,
+        )
+        .then((res) => {
+          dispatch(setNumberOfPizzas(res.data.length));
+        });
+    } else {
+      isInitialLoad.current = false;
+    }
+  }, [sortType, categoryId, searchValue, currentPage, dispatch, navigate]);
 
   return (
     <div className="App">
