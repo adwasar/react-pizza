@@ -16,7 +16,7 @@ function HomePage() {
 
   const categoryId = useSelector((state) => state.filter.categoryId);
   const sortType = useSelector((state) => state.filter.sortBy);
-  const currentPage = useSelector((state) => state.pagination.currentPage);
+  const currentPage = useSelector((state) => state.filter.currentPage);
   const searchValue = useSelector((state) => state.search.value);
 
   const [pizzas, setPizzas] = useState([]);

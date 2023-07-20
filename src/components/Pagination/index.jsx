@@ -1,12 +1,12 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { setCurrentPage } from '../../redux/slices/paginationSlice';
+import { setCurrentPage } from '../../redux/slices/filterSlice';
 import styles from './Pagination.module.scss';
 
-function Pagination({ pizzas }) {
+function Pagination() {
   const dispatch = useDispatch();
-  const currentPage = useSelector((state) => state.pagination.currentPage);
+  const currentPage = useSelector((state) => state.filter.currentPage);
   const numberOfPizzas = useSelector((state) => state.pagination.numberOfPizzas);
 
   const pages = [...Array(Math.ceil(numberOfPizzas / 8))];
