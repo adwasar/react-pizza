@@ -3,20 +3,20 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { setSortType } from '../redux/slices/filterSlice';
 
+export const categories = [
+  { name: 'популярности', attribute: 'rating' },
+  { name: 'цене (возрастанию)', attribute: 'price' },
+  { name: 'цене (убыванию)', attribute: '-price' },
+  { name: 'алфавиту (а-я)', attribute: 'title' },
+  { name: 'алфавиту (я-а)', attribute: '-title' },
+];
+
 function Sort() {
   const dispatch = useDispatch();
   const sortType = useSelector((state) => state.filter.sortBy);
 
   const [isOpen, setIsOpen] = React.useState(false);
   const sortRef = React.useRef(null);
-
-  const categories = [
-    { name: 'популярности', attribute: 'rating' },
-    { name: 'цене (возрастанию)', attribute: 'price' },
-    { name: 'цене (убыванию)', attribute: '-price' },
-    { name: 'алфавиту (а-я)', attribute: 'title' },
-    { name: 'алфавиту (я-а)', attribute: '-title' },
-  ];
 
   const handleCategoryChange = (indx) => {
     dispatch(setSortType(indx));
@@ -58,7 +58,7 @@ function Sort() {
               <li
                 key={i}
                 onClick={() => handleCategoryChange(category)}
-                className={sortType.name === category.name ? 'active' : ''}>
+                className={sortType.name === category.name || sortType.name ? 'active' : ''}>
                 {categories[i].name}
               </li>
             ))}

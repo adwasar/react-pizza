@@ -15,7 +15,6 @@ function Search() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateSearchValue = useCallback(
     lodash((str) => {
-      console.log('test');
       dispatch(setSearchValue(str));
     }, 500),
     [],

@@ -30,7 +30,6 @@ function HomePage() {
 
   useEffect(() => {
     const searchObj = qs.parse(window.location.search.substring(1));
-    console.log(searchObj);
     dispatch(setCategoryId(+searchObj.category));
 
     if (window.location.search) {
@@ -42,11 +41,14 @@ function HomePage() {
           setIsLoading(false);
         });
     } else {
-      axios.get(`https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas`).then((res) => {
-        dispatch(setNumberOfPizzas(res.data.length));
-        setPizzas(res.data);
-        setIsLoading(false);
-      });
+      axios
+        .get(`https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?length=8&page=1`)
+        .then((res) => {
+          dispatch(setNumberOfPizzas(res.data.length));
+          dispatch(setCategoryId(0));
+          setPizzas(res.data);
+          setIsLoading(false);
+        });
     }
   }, [dispatch]);
 
