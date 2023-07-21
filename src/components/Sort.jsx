@@ -58,7 +58,7 @@ function Sort() {
               <li
                 key={i}
                 onClick={() => handleCategoryChange(category)}
-                className={sortType.name === category.name || sortType.name ? 'active' : ''}>
+                className={sortType.name === category.name ? 'active' : ''}>
                 {categories[i].name}
               </li>
             ))}
