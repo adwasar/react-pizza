@@ -9,7 +9,7 @@ import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import SkeletonPizza from '../components/PizzaBlock/Skeleton';
 
-import { setCategoryId, setSortType } from '../redux/slices/filterSlice';
+import { setCategoryId, setSortType, setCurrentPage } from '../redux/slices/filterSlice';
 import { setNumberOfPizzas } from '../redux/slices/paginationSlice';
 import { categories } from '../components/Sort';
 import Pagination from '../components/Pagination';
@@ -38,9 +38,8 @@ function HomePage() {
         .get(`https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas${window.location.search}`)
         .then((res) => {
           dispatch(setNumberOfPizzas(res.data.length));
-          setPizzas(res.data);
-          setIsLoading(false);
-
+          dispatch(setCurrentPage(+searchObj.page));
+          dispatch(setCategoryId(searchObj.category ? searchObj.category : 0));
           if (searchObj.sortBy === 'rating' && searchObj.order === 'asc') {
             dispatch(setSortType(categories[0]));
           } else if (searchObj.sortBy === 'price' && searchObj.order === 'asc') {
@@ -52,6 +51,11 @@ function HomePage() {
           } else if (searchObj.sortBy === 'title' && searchObj.order === 'desc') {
             dispatch(setSortType(categories[4]));
           }
+
+          console.log(searchObj);
+
+          setPizzas(res.data);
+          setIsLoading(false);
         });
     } else {
       axios
