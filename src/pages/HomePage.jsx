@@ -9,8 +9,9 @@ import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import SkeletonPizza from '../components/PizzaBlock/Skeleton';
 
-import { setCategoryId } from '../redux/slices/filterSlice';
+import { setCategoryId, setSortType } from '../redux/slices/filterSlice';
 import { setNumberOfPizzas } from '../redux/slices/paginationSlice';
+import { categories } from '../components/Sort';
 import Pagination from '../components/Pagination';
 
 function HomePage() {
@@ -39,6 +40,18 @@ function HomePage() {
           dispatch(setNumberOfPizzas(res.data.length));
           setPizzas(res.data);
           setIsLoading(false);
+
+          if (searchObj.sortBy === 'rating' && searchObj.order === 'asc') {
+            dispatch(setSortType(categories[0]));
+          } else if (searchObj.sortBy === 'price' && searchObj.order === 'asc') {
+            dispatch(setSortType(categories[1]));
+          } else if (searchObj.sortBy === 'price' && searchObj.order === 'desc') {
+            dispatch(setSortType(categories[2]));
+          } else if (searchObj.sortBy === 'title' && searchObj.order === 'asc') {
+            dispatch(setSortType(categories[3]));
+          } else if (searchObj.sortBy === 'title' && searchObj.order === 'desc') {
+            dispatch(setSortType(categories[4]));
+          }
         });
     } else {
       axios
