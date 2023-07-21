@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -9,7 +9,12 @@ import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import SkeletonPizza from '../components/PizzaBlock/Skeleton';
 
-import { setCategoryId, setSortType, setCurrentPage } from '../redux/slices/filterSlice';
+import {
+  setCategoryId,
+  setSortType,
+  setCurrentPage,
+  setSearchParams,
+} from '../redux/slices/filterSlice';
 import { setNumberOfPizzas } from '../redux/slices/paginationSlice';
 import { categories } from '../components/Sort';
 import Pagination from '../components/Pagination';
@@ -24,14 +29,13 @@ function HomePage() {
   const searchValue = useSelector((state) => state.search.value);
 
   const [pizzas, setPizzas] = useState([]);
+  const [isUrlLoading, setIsUrlLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
-  const isInitialLoad = useRef(true);
 
   const pizzasOnPage = pizzas.map((pizza) => <PizzaBlock key={pizza.id} {...pizza} />);
 
   useEffect(() => {
     const searchObj = qs.parse(window.location.search.substring(1));
-    dispatch(setCategoryId(+searchObj.category));
 
     if (window.location.search) {
       axios
@@ -39,7 +43,8 @@ function HomePage() {
         .then((res) => {
           dispatch(setNumberOfPizzas(res.data.length));
           dispatch(setCurrentPage(+searchObj.page));
-          dispatch(setCategoryId(searchObj.category ? searchObj.category : 0));
+          dispatch(setCategoryId(searchObj.category ? +searchObj.category : 0));
+          dispatch(setSearchParams(searchObj.search));
           if (searchObj.sortBy === 'rating' && searchObj.order === 'asc') {
             dispatch(setSortType(categories[0]));
           } else if (searchObj.sortBy === 'price' && searchObj.order === 'asc') {
@@ -52,31 +57,36 @@ function HomePage() {
             dispatch(setSortType(categories[4]));
           }
 
-          console.log(searchObj);
-
           setPizzas(res.data);
           setIsLoading(false);
+          setIsUrlLoading(false);
         });
     } else {
       axios
-        .get(`https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?length=8&page=1`)
+        .get(`https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?&page=1&limit=8`)
         .then((res) => {
-          dispatch(setNumberOfPizzas(res.data.length));
           dispatch(setCategoryId(0));
           setPizzas(res.data);
           setIsLoading(false);
+          setIsUrlLoading(false);
         });
+
+      axios.get(`https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas`).then((res) => {
+        dispatch(setNumberOfPizzas(res.data.length));
+      });
     }
   }, [dispatch]);
 
   useEffect(() => {
-    if (!isInitialLoad.current) {
+    if (!isUrlLoading) {
       const order = sortType.attribute.includes('-') ? '&order=desc' : '&order=asc';
       const sortBy = `&sortBy=${sortType.attribute.replace('-', '')}`;
       const category = categoryId > 0 ? `&category=${categoryId}` : '';
       const searchParam = searchValue ? `&search=${searchValue}` : '';
       const page = `&page=${currentPage}`;
       const limit = `&limit=8`;
+
+      console.log('test');
 
       setIsLoading(true);
       axios
@@ -99,8 +109,6 @@ function HomePage() {
         .then((res) => {
           dispatch(setNumberOfPizzas(res.data.length));
         });
-    } else {
-      isInitialLoad.current = false;
     }
   }, [sortType, categoryId, searchValue, currentPage, dispatch, navigate]);
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import lodash from 'lodash.debounce';
 
@@ -9,6 +9,7 @@ function Search() {
   const [value, setValue] = useState('');
   const dispatch = useDispatch();
   const searchValue = useSelector((state) => state.search.value);
+  const searchParams = useSelector((state) => state.filter.searchParams);
 
   const inputRef = useRef();
 
@@ -19,6 +20,10 @@ function Search() {
     }, 500),
     [],
   );
+
+  useEffect(() => {
+    setValue(searchParams);
+  }, [searchParams]);
 
   const onChangeInput = (e) => {
     setValue(e.target.value);
