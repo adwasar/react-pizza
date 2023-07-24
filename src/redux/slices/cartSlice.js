@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
+  totalPrice: 0,
   items: [],
 };
 
@@ -10,10 +11,11 @@ const filterSlice = createSlice({
   reducers: {
     setItems(state, action) {
       state.items = [...state.items, action.payload];
+      state.totalPrice = state.items.reduce((sum, el) => sum + el.price, 0);
     },
   },
 });
 
-export const { setItems } = filterSlice.actions;
+export const { setItems, setTotalPrice } = filterSlice.actions;
 
 export default filterSlice.reducer;

@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 function Header() {
   const cartItems = useSelector((state) => state.cart.items);
-  const totalPrice = cartItems.reduce((sum, el) => sum + el.price, 0);
+  const totalPrice = useSelector((state) => state.cart.totalPrice);
 
   return (
     <div className="header">
