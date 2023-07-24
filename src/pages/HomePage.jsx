@@ -110,7 +110,7 @@ function HomePage() {
           dispatch(setNumberOfPizzas(res.data.length));
         });
     }
-  }, [sortType, categoryId, searchValue, currentPage, dispatch, navigate]);
+  }, [sortType, categoryId, searchValue, currentPage, isUrlLoading, navigate, dispatch]);
 
   return (
     <div className="App">

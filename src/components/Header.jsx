@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom';
 
 import Search from './Search';
+import { useSelector } from 'react-redux';
 
 function Header() {
+  const cartItems = useSelector((state) => state.cart.items);
+
   return (
     <div className="header">
       <div className="container">
@@ -48,7 +51,7 @@ function Header() {
                 strokeLinejoin="round"
               />
             </svg>
-            <span>3</span>
+            <span>{cartItems.length}</span>
           </Link>
         </div>
       </div>
