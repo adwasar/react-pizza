@@ -11,7 +11,7 @@ function PizzaBlock({ title, price, imageUrl, sizes, types }) {
   const typeNames = ['тонкое', 'традиционное'];
 
   const addToCart = () => {
-    dispatch(setItems({ title: 'newCard' }));
+    dispatch(setItems({ title, price, imageUrl, size: sizes[sizeIndx], type: types[typeIndx] }));
   };
 
   return (
@@ -24,7 +24,7 @@ function PizzaBlock({ title, price, imageUrl, sizes, types }) {
             <li
               key={typeId}
               onClick={() => setTypeIndx(typeId)}
-              className={typeIndx === typeId ? 'active' : ''}>
+              className={typeIndx === typeId || types.length === 1 ? 'active' : ''}>
               {typeNames[typeId]}
             </li>
           ))}

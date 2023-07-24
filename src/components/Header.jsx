@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 
 function Header() {
   const cartItems = useSelector((state) => state.cart.items);
+  const totalPrice = cartItems.reduce((sum, el) => sum + el.price, 0);
 
   return (
     <div className="header">
@@ -21,7 +22,7 @@ function Header() {
         <Search />
         <div className="header__cart">
           <Link to="/cart" className="button button--cart">
-            <span>520 ₴</span>
+            <span>{totalPrice} ₴</span>
             <div className="button__delimiter"></div>
             <svg
               width="18"

@@ -27,12 +27,15 @@ function HomePage() {
   const sortType = useSelector((state) => state.filter.sortBy);
   const currentPage = useSelector((state) => state.filter.currentPage);
   const searchValue = useSelector((state) => state.search.value);
+  const cartItems = useSelector((state) => state.cart.items);
 
   const [pizzas, setPizzas] = useState([]);
   const [isUrlLoading, setIsUrlLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
   const pizzasOnPage = pizzas.map((pizza) => <PizzaBlock key={pizza.id} {...pizza} />);
+
+  useEffect(() => console.log(cartItems), [cartItems]);
 
   useEffect(() => {
     const searchObj = qs.parse(window.location.search.substring(1));
@@ -85,8 +88,6 @@ function HomePage() {
       const searchParam = searchValue ? `&search=${searchValue}` : '';
       const page = `&page=${currentPage}`;
       const limit = `&limit=8`;
-
-      console.log('test');
 
       setIsLoading(true);
       axios
