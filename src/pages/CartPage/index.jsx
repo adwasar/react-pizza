@@ -3,8 +3,11 @@ import { Link } from 'react-router-dom';
 import CartItem from '../../components/CartItem';
 
 import styles from './CartPage.module.scss';
+import { useSelector } from 'react-redux';
 
 function CartPage() {
+  const numberOfPizzas = useSelector((state) => state.cart.numberOfPizzas);
+
   return (
     <>
       <div className={styles['cart-content']}>
@@ -92,7 +95,7 @@ function CartPage() {
                 <div className="cart__bottom-details">
                   <span>
                     {' '}
-                    Всего пицц: <b>3 шт.</b>{' '}
+                    Всего пицц: <b>{numberOfPizzas} шт.</b>{' '}
                   </span>
                   <span>
                     {' '}
