@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 
 function CartPage() {
   const numberOfPizzas = useSelector((state) => state.cart.numberOfPizzas);
+  const totalPrice = useSelector((state) => state.cart.totalPrice);
 
   return (
     <>
@@ -99,7 +100,7 @@ function CartPage() {
                   </span>
                   <span>
                     {' '}
-                    Сумма заказа: <b>450 ₴</b>{' '}
+                    Сумма заказа: <b>{totalPrice} ₴</b>{' '}
                   </span>
                 </div>
                 <div className="cart__bottom-buttons">
