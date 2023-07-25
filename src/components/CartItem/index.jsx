@@ -1,6 +1,8 @@
 function CartItem(props) {
   const pizzaType = ['тонкое', 'традиционное'];
 
+  console.log(props);
+
   return (
     <div className="cart__item">
       <div className="cart__item-img">
@@ -30,7 +32,7 @@ function CartItem(props) {
             />
           </svg>
         </div>
-        <b>2</b>
+        <b>{props.count}</b>
         <div className="button button--outline button--circle cart__item-count-plus">
           <svg
             width="10"

@@ -3,15 +3,23 @@ import { useDispatch } from 'react-redux';
 
 import { setItems } from '../../redux/slices/cartSlice';
 
-function PizzaBlock({ title, price, imageUrl, sizes, types }) {
+function PizzaBlock({ title, price, imageUrl, sizes, types, id }) {
   const dispatch = useDispatch();
   const [sizeIndx, setSizeIndx] = React.useState(0);
   const [typeIndx, setTypeIndx] = React.useState(0);
-
   const typeNames = ['тонкое', 'традиционное'];
 
   const addToCart = () => {
-    dispatch(setItems({ title, price, imageUrl, size: sizes[sizeIndx], type: types[typeIndx] }));
+    const cartItem = {
+      id,
+      title,
+      price,
+      imageUrl,
+      size: sizes[sizeIndx],
+      type: types[typeIndx],
+      count: 1,
+    };
+    dispatch(setItems(cartItem));
   };
 
   return (

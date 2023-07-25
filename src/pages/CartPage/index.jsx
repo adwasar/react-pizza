@@ -98,6 +98,7 @@ function CartPage() {
                     img={el.imageUrl}
                     size={el.size}
                     type={el.type}
+                    count={el.count}
                     key={i}
                   />
                 ))}
