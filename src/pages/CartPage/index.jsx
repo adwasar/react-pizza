@@ -6,8 +6,11 @@ import styles from './CartPage.module.scss';
 import { useSelector } from 'react-redux';
 
 function CartPage() {
+  const cartPizzas = useSelector((state) => state.cart.items);
   const numberOfPizzas = useSelector((state) => state.cart.numberOfPizzas);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
+
+  console.log(cartPizzas);
 
   return (
     <>
@@ -88,8 +91,15 @@ function CartPage() {
                 </div>
               </div>
               <div className={styles['content__items']}>
-                {[...Array(6)].map((_, i) => (
-                  <CartItem key={i} />
+                {cartPizzas.map((el, i) => (
+                  <CartItem
+                    title={el.title}
+                    price={el.price}
+                    img={el.imageUrl}
+                    size={el.size}
+                    type={el.type}
+                    key={i}
+                  />
                 ))}
               </div>
               <div className="cart__bottom">
