@@ -10,8 +10,6 @@ function CartPage() {
   const numberOfPizzas = useSelector((state) => state.cart.numberOfPizzas);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
 
-  console.log(cartPizzas);
-
   return (
     <>
       <div className={styles['cart-content']}>
@@ -99,6 +97,7 @@ function CartPage() {
                     size={el.size}
                     type={el.type}
                     count={el.count}
+                    id={el.id}
                     key={i}
                   />
                 ))}
@@ -106,12 +105,10 @@ function CartPage() {
               <div className="cart__bottom">
                 <div className="cart__bottom-details">
                   <span>
-                    {' '}
-                    Всего пицц: <b>{numberOfPizzas} шт.</b>{' '}
+                    Всего пицц: <b>{numberOfPizzas} шт.</b>
                   </span>
                   <span>
-                    {' '}
-                    Сумма заказа: <b>{totalPrice} ₴</b>{' '}
+                    Сумма заказа: <b>{totalPrice} ₴</b>
                   </span>
                 </div>
                 <div className="cart__bottom-buttons">

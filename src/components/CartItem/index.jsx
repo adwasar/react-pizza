@@ -1,7 +1,17 @@
+import { useDispatch } from 'react-redux';
+import { addCount, subtractCount } from '../../redux/slices/cartSlice';
+
 function CartItem(props) {
+  const dispatch = useDispatch();
   const pizzaType = ['тонкое', 'традиционное'];
 
-  console.log(props);
+  const addPizza = () => {
+    dispatch(addCount({ ...props }));
+  };
+
+  const subtractPizza = () => {
+    dispatch(subtractCount({ ...props }));
+  };
 
   return (
     <div className="cart__item">
@@ -15,7 +25,9 @@ function CartItem(props) {
         </p>
       </div>
       <div className="cart__item-count">
-        <div className="button button--outline button--circle cart__item-count-minus">
+        <div
+          onClick={subtractPizza}
+          className="button button--outline button--circle cart__item-count-minus">
           <svg
             width="10"
             height="10"
@@ -33,7 +45,9 @@ function CartItem(props) {
           </svg>
         </div>
         <b>{props.count}</b>
-        <div className="button button--outline button--circle cart__item-count-plus">
+        <div
+          onClick={addPizza}
+          className="button button--outline button--circle cart__item-count-plus">
           <svg
             width="10"
             height="10"
