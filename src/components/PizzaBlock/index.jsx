@@ -1,13 +1,17 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { setItems } from '../../redux/slices/cartSlice';
 
 function PizzaBlock({ title, price, imageUrl, sizes, types, id }) {
   const dispatch = useDispatch();
+  const pizzaCards = useSelector((store) => store.cart.items);
   const [sizeIndx, setSizeIndx] = React.useState(0);
   const [typeIndx, setTypeIndx] = React.useState(0);
   const typeNames = ['тонкое', 'традиционное'];
+
+  // сначала фильтруем элементы по id, потом суммируем их count
+  const pizzaCount = pizzaCards.filter((el) => el.id === id).reduce((sum, el) => sum + el.count, 0);
 
   const addToCart = () => {
     const cartItem = {
@@ -63,7 +67,7 @@ function PizzaBlock({ title, price, imageUrl, sizes, types, id }) {
             />
           </svg>
           <span>Добавить</span>
-          <i>0</i>
+          <i>{pizzaCount}</i>
         </button>
       </div>
     </div>
