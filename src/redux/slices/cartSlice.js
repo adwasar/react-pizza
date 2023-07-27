@@ -55,9 +55,14 @@ const filterSlice = createSlice({
       setTotalPrice(state);
       setNumberOfPizzas(state);
     },
+    clearCart(state) {
+      state.items = [];
+      setTotalPrice(state);
+      setNumberOfPizzas(state);
+    },
   },
 });
 
-export const { setItems, addCount, subtractCount } = filterSlice.actions;
+export const { setItems, addCount, subtractCount, clearCart } = filterSlice.actions;
 
 export default filterSlice.reducer;
