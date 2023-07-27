@@ -6,6 +6,14 @@ const initialState = {
   numberOfPizzas: 0,
 };
 
+const setTotalPrice = (state) => {
+  state.totalPrice = state.items.reduce((sum, el) => sum + el.price * el.count, 0);
+};
+
+const setNumberOfPizzas = (state) => {
+  state.numberOfPizzas = state.items.reduce((sum, el) => sum + el.count, 0);
+};
+
 const filterSlice = createSlice({
   name: 'filter',
   initialState,
@@ -20,8 +28,8 @@ const filterSlice = createSlice({
       } else {
         state.items = [...state.items, action.payload];
       }
-      state.totalPrice = state.items.reduce((sum, el) => sum + el.price * el.count, 0);
-      state.numberOfPizzas = state.items.reduce((sum, el) => sum + el.count, 0);
+      setTotalPrice(state);
+      setNumberOfPizzas(state);
     },
     addCount(state, action) {
       const { id, type, size } = action.payload;
@@ -29,8 +37,8 @@ const filterSlice = createSlice({
         (el) => el.id === id && el.type === type && el.size === size,
       );
       currentCard.count++;
-      state.totalPrice = state.items.reduce((sum, el) => sum + el.price * el.count, 0);
-      state.numberOfPizzas = state.items.reduce((sum, el) => sum + el.count, 0);
+      setTotalPrice(state);
+      setNumberOfPizzas(state);
     },
     subtractCount(state, action) {
       const { id, type, size } = action.payload;
@@ -44,8 +52,8 @@ const filterSlice = createSlice({
           (el) => !(el.id === id && el.type === type && el.size === size),
         );
       }
-      state.totalPrice = state.items.reduce((sum, el) => sum + el.price * el.count, 0);
-      state.numberOfPizzas = state.items.reduce((sum, el) => sum + el.count, 0);
+      setTotalPrice(state);
+      setNumberOfPizzas(state);
     },
   },
 });
