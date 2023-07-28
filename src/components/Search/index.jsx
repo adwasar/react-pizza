@@ -22,7 +22,7 @@ function Search() {
   );
 
   useEffect(() => {
-    setValue(searchParams);
+    setValue(searchParams || '');
   }, [searchParams]);
 
   const onChangeInput = (e) => {
