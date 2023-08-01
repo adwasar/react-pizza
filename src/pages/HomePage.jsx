@@ -37,44 +37,45 @@ function HomePage() {
   useEffect(() => {
     const searchObj = qs.parse(window.location.search.substring(1));
 
-    if (window.location.search) {
-      axios
-        .get(`https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas${window.location.search}`)
-        .then((res) => {
-          dispatch(setNumberOfPizzas(res.data.length));
-          dispatch(setCurrentPage(+searchObj.page));
-          dispatch(setCategoryId(searchObj.category ? +searchObj.category : 0));
-          dispatch(setSearchParams(searchObj.search));
-          if (searchObj.sortBy === 'rating' && searchObj.order === 'asc') {
-            dispatch(setSortType(categories[0]));
-          } else if (searchObj.sortBy === 'price' && searchObj.order === 'asc') {
-            dispatch(setSortType(categories[1]));
-          } else if (searchObj.sortBy === 'price' && searchObj.order === 'desc') {
-            dispatch(setSortType(categories[2]));
-          } else if (searchObj.sortBy === 'title' && searchObj.order === 'asc') {
-            dispatch(setSortType(categories[3]));
-          } else if (searchObj.sortBy === 'title' && searchObj.order === 'desc') {
-            dispatch(setSortType(categories[4]));
-          }
+    const fetchData = async () => {
+      if (window.location.search) {
+        const pizzasRes = await axios.get(
+          `https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas${window.location.search}`,
+        );
+        dispatch(setNumberOfPizzas(pizzasRes.data.length));
+        dispatch(setCurrentPage(+searchObj.page));
+        dispatch(setCategoryId(searchObj.category ? +searchObj.category : 0));
+        dispatch(setSearchParams(searchObj.search));
+        if (searchObj.sortBy === 'rating' && searchObj.order === 'asc') {
+          dispatch(setSortType(categories[0]));
+        } else if (searchObj.sortBy === 'price' && searchObj.order === 'asc') {
+          dispatch(setSortType(categories[1]));
+        } else if (searchObj.sortBy === 'price' && searchObj.order === 'desc') {
+          dispatch(setSortType(categories[2]));
+        } else if (searchObj.sortBy === 'title' && searchObj.order === 'asc') {
+          dispatch(setSortType(categories[3]));
+        } else if (searchObj.sortBy === 'title' && searchObj.order === 'desc') {
+          dispatch(setSortType(categories[4]));
+        }
+        setPizzas(pizzasRes.data);
+        setIsLoading(false);
+        setIsUrlLoading(false);
+      } else {
+        const pizzasRes = await axios.get(
+          `https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?&page=1&limit=8`,
+        );
+        const numberOfPizzasRes = await axios.get(
+          `https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas`,
+        );
+        dispatch(setCategoryId(0));
+        setPizzas(pizzasRes.data);
+        setIsLoading(false);
+        setIsUrlLoading(false);
+        dispatch(setNumberOfPizzas(numberOfPizzasRes.data.length));
+      }
+    };
 
-          setPizzas(res.data);
-          setIsLoading(false);
-          setIsUrlLoading(false);
-        });
-    } else {
-      axios
-        .get(`https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?&page=1&limit=8`)
-        .then((res) => {
-          dispatch(setCategoryId(0));
-          setPizzas(res.data);
-          setIsLoading(false);
-          setIsUrlLoading(false);
-        });
-
-      axios.get(`https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas`).then((res) => {
-        dispatch(setNumberOfPizzas(res.data.length));
-      });
-    }
+    fetchData();
   }, [dispatch]);
 
   useEffect(() => {
@@ -87,26 +88,25 @@ function HomePage() {
       const limit = `&limit=8`;
 
       setIsLoading(true);
-      axios
-        .get(
+
+      const fetchData = async () => {
+        const pizzasRes = await axios.get(
           `https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?${searchParam}${category}${sortBy}${order}${page}${limit}`,
-        )
-        .then((res) => {
-          navigate(`?${searchParam}${category}${sortBy}${order}${page}${limit}`);
-          if (!searchParam && !category && sortType.attribute === 'rating' && currentPage === 1) {
-            const newUrl = window.location.pathname;
-            window.history.replaceState({}, '', newUrl);
-          }
-          setPizzas(res.data);
-          setIsLoading(false);
-        });
-      axios
-        .get(
+        );
+        const numberOfPizzasRes = await axios.get(
           `https://646789062ea3cae8dc31f2fb.mockapi.io/pizzas?${searchParam}${category}${sortBy}${order}`,
-        )
-        .then((res) => {
-          dispatch(setNumberOfPizzas(res.data.length));
-        });
+        );
+        dispatch(setNumberOfPizzas(numberOfPizzasRes.data.length));
+        navigate(`?${searchParam}${category}${sortBy}${order}${page}${limit}`);
+        if (!searchParam && !category && sortType.attribute === 'rating' && currentPage === 1) {
+          const newUrl = window.location.pathname;
+          window.history.replaceState({}, '', newUrl);
+        }
+        setPizzas(pizzasRes.data);
+        setIsLoading(false);
+      };
+
+      fetchData();
     }
   }, [sortType, categoryId, searchValue, currentPage, isUrlLoading, navigate, dispatch]);
 
