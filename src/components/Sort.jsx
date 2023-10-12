@@ -1,19 +1,25 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-function Sort({ sortType, onChangeSort }) {
+import { setSortType } from '../redux/slices/filterSlice';
+
+export const categories = [
+  { name: 'популярности', attribute: 'rating' },
+  { name: 'цене (возрастанию)', attribute: 'price' },
+  { name: 'цене (убыванию)', attribute: '-price' },
+  { name: 'алфавиту (а-я)', attribute: 'title' },
+  { name: 'алфавиту (я-а)', attribute: '-title' },
+];
+
+function Sort() {
+  const dispatch = useDispatch();
+  const sortType = useSelector((state) => state.filter.sortBy);
+
   const [isOpen, setIsOpen] = React.useState(false);
   const sortRef = React.useRef(null);
 
-  const categories = [
-    { name: 'популярности', attribute: 'rating' },
-    { name: 'цене (возрастанию)', attribute: 'price' },
-    { name: 'цене (убыванию)', attribute: '-price' },
-    { name: 'алфавиту (а-я)', attribute: 'title' },
-    { name: 'алфавиту (я-а)', attribute: '-title' },
-  ];
-
   const handleCategoryChange = (indx) => {
-    onChangeSort(indx);
+    dispatch(setSortType(indx));
     setIsOpen(false);
   };
 
